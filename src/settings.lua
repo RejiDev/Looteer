@@ -29,6 +29,8 @@ function Settings.update()
       rarity = gui.elements.general.rarity_combo:get(),
       distance = gui.elements.general.distance_slider:get(),
       skip_dropped = gui.elements.general.skip_dropped_toggle:get(),
+      closest_dropped = gui.elements.general.loot_closest_toggle:get(),
+      best_dropped = gui.elements.general.loot_best_toggle:get(),
 
       -- Affix Settings
       ga_count = gui.elements.affix_settings.greater_affix_slider:get(),

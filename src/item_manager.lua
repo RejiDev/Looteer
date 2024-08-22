@@ -111,4 +111,54 @@ function ItemManager.get_nearby_item()
    return fetched_items[1]
 end
 
+function ItemManager.calculate_item_score(item)
+   local score = 0
+   local item_info = item:get_item_info()
+   local item_id = item_info:get_sno_id()
+   local display_name = item_info:get_display_name()
+   local item_rarity = item_info:get_rarity()
+
+   if CustomItems.ubers[item_id] then
+      score = score + 1000
+   elseif item_rarity >= 5 then
+      score = score + 500
+   elseif item_rarity >= 3 then
+      score = score + 300
+   elseif item_rarity >= 1 then
+      score = score + 100
+   else
+      score = score + 10
+   end
+
+   local greater_affix_count = Utils.get_greater_affix_count(display_name)
+
+   if greater_affix_count == 3 then
+      score = score + 100
+   elseif greater_affix_count == 2 then
+      score = score + 75
+   elseif greater_affix_count == 1 then
+      score = score + 50
+   end
+
+   return score
+end
+
+function ItemManager.get_best_item()
+   local items = actors_manager:get_all_items()
+   local scored_items = {}
+
+   for _, item in ipairs(items) do
+      if ItemManager.check_want_item(item, false) then
+         local item_object = { Item = item, Score = ItemManager.calculate_item_score(item) }
+         table.insert(scored_items, item_object)
+      end
+   end
+
+   table.sort(scored_items, function(x, y)
+      return x.Score > y.Score
+   end)
+
+   return scored_items[1]
+end
+
 return ItemManager
